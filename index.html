@@ -1,0 +1,3041 @@
+<!DOCTYPE html>
+<html lang="th">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>For My Love ❤️</title>
+    <link href="https://fonts.googleapis.com/css2?family=Itim&family=Sarabun:wght@300;400;600&display=swap" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <style>
+        /* --- CSS STYLE START (Same as before) --- */
+        
+        body {
+            font-family: 'Itim', cursive;
+            background: linear-gradient(120deg, #ff9a9e 0%, #fecfef 100%);
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            overflow: hidden;
+            cursor: default;
+        }
+        
+        .cursor-heart {
+            position: fixed;
+            top: 0;
+            left: 0;
+            font-size: 20px;
+            pointer-events: none;
+            z-index: 9999;
+            transform: translate(-50%, -50%);
+            animation: floatUpFade 1s ease-out forwards;
+        }
+        
+        @keyframes floatUpFade {
+            0% {
+                transform: translate(-50%, -50%) scale(0.5);
+                opacity: 0.8;
+            }
+            100% {
+                transform: translate(-50%, -100px) scale(1.2);
+                opacity: 0;
+            }
+        }
+        
+        .heart-bg,
+        .rose-bg {
+            position: absolute;
+            top: -10vh;
+            animation: fall linear infinite;
+            z-index: 0;
+            pointer-events: none;
+        }
+        
+        .heart-bg {
+            color: rgba(255, 255, 255, 0.6);
+        }
+        
+        .rose-bg {
+            font-size: 20px;
+            opacity: 0.8;
+        }
+        
+        @keyframes fall {
+            to {
+                transform: translateY(110vh) rotate(360deg);
+            }
+        }
+        
+        .balloon {
+            position: absolute;
+            bottom: -50px;
+            width: 30px;
+            height: 40px;
+            background: red;
+            border-radius: 50%;
+            z-index: 1;
+            animation: floatUp 5s linear infinite;
+            opacity: 0.7;
+        }
+        
+        .balloon::after {
+            content: '';
+            position: absolute;
+            bottom: -10px;
+            left: 50%;
+            width: 1px;
+            height: 15px;
+            background: rgba(0, 0, 0, 0.2);
+        }
+        
+        @keyframes floatUp {
+            0% {
+                transform: translateY(0) rotate(0deg);
+                opacity: 0.7;
+            }
+            100% {
+                transform: translateY(-110vh) rotate(20deg);
+                opacity: 0;
+            }
+        }
+        
+        .container {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(20px);
+            border-radius: 30px;
+            box-shadow: 0 20px 60px rgba(255, 107, 129, 0.2);
+            width: 90vw;
+            height: 90vh;
+            padding: 20px;
+            box-sizing: border-box;
+            text-align: center;
+            z-index: 10;
+            border: 6px solid white;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .music-control {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            z-index: 100;
+            background: white;
+            border-radius: 50%;
+            width: 45px;
+            height: 45px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            box-shadow: 0 5px 15px rgba(255, 107, 129, 0.2);
+            font-size: 22px;
+            transition: 0.3s;
+            color: #ff6b81;
+        }
+        
+        .music-control:hover {
+            transform: scale(1.1);
+        }
+        
+        .page {
+            display: none;
+            width: 100%;
+            height: 100%;
+            animation: zoomIn 0.5s ease;
+            box-sizing: border-box;
+        }
+        
+        .page.active {
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        @keyframes zoomIn {
+            from {
+                opacity: 0;
+                transform: scale(0.95);
+            }
+            to {
+                opacity: 1;
+                transform: scale(1);
+            }
+        }
+        
+        h1 {
+            color: #ff6b81;
+            font-size: clamp(1.8rem, 4vw, 3rem);
+            margin: 0 0 10px 0;
+            text-shadow: 2px 2px 0px white;
+            flex-shrink: 0;
+        }
+        
+        .glow-text {
+            animation: colorChange 2s infinite alternate;
+            text-shadow: 0 0 10px rgba(255, 105, 180, 0.5);
+        }
+        
+        @keyframes colorChange {
+            0% {
+                color: #ff6b81;
+                transform: scale(1);
+            }
+            100% {
+                color: #ff9f43;
+                transform: scale(1.05);
+                text-shadow: 0 0 20px rgba(255, 165, 0, 0.6);
+            }
+        }
+        
+        .split-layout {
+            display: flex;
+            width: 100%;
+            height: 100%;
+            gap: 20px;
+            align-items: center;
+            overflow: hidden;
+            padding: 10px;
+            box-sizing: border-box;
+        }
+        
+        .split-left {
+            flex: 1;
+            height: 100%;
+            position: relative;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+        
+        .split-right {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            height: 100%;
+            z-index: 5;
+            overflow-y: auto;
+            padding-right: 5px;
+        }
+        
+        .page:not(#page-login) .split-right {
+            justify-content: flex-start;
+        }
+        
+        .split-right::-webkit-scrollbar {
+            width: 5px;
+            background: transparent;
+        }
+        
+        .split-right::-webkit-scrollbar-thumb {
+            background: #ffb3c6;
+            border-radius: 10px;
+        }
+        /* Floating Animation for Login Image */
+        
+        .login-img {
+            width: 100%;
+            height: 90%;
+            object-fit: cover;
+            border-radius: 20px;
+            border: 5px solid white;
+            box-shadow: 0 10px 20px rgba(255, 107, 129, 0.15);
+            transform: rotate(-2deg);
+            animation: floatImage 3s ease-in-out infinite alternate;
+        }
+        
+        @keyframes floatImage {
+            0% {
+                transform: rotate(-2deg) translateY(0);
+            }
+            100% {
+                transform: rotate(-2deg) translateY(-10px);
+            }
+        }
+        
+        .anniversary-slideshow,
+        .photo-frame {
+            width: 100%;
+            height: 95%;
+            position: relative;
+            border-radius: 20px;
+            border: 5px solid white;
+            box-shadow: 0 10px 20px rgba(255, 107, 129, 0.15);
+            transform: rotate(-2deg);
+            overflow: hidden;
+            background: #fff;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+        
+        .photo-frame {
+            padding: 10px 10px 60px 10px;
+            box-sizing: border-box;
+        }
+        
+        .video-frame {
+            width: 100%;
+            height: 100%;
+            object-fit: contain;
+            border-radius: 5px;
+            background: #000;
+        }
+        
+        .anni-slide-img,
+        .carousel-img {
+            max-width: 100%;
+            max-height: 100%;
+            width: auto;
+            height: auto;
+            object-fit: contain;
+            position: absolute;
+            opacity: 0;
+            transition: opacity 1s ease-in-out;
+        }
+        
+        .anni-slide-img.active,
+        .carousel-img.active {
+            opacity: 1;
+        }
+        
+        .login-slideshow {
+            width: 100%;
+            height: 90%;
+            position: relative;
+            border-radius: 20px;
+            border: 5px solid white;
+            box-shadow: 0 10px 20px rgba(255, 107, 129, 0.15);
+            transform: rotate(-2deg);
+            overflow: hidden;
+            background: #fff;
+        }
+        
+        .login-slide-img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            position: absolute;
+            top: 0;
+            left: 0;
+            opacity: 0;
+            transition: opacity 1.5s ease-in-out;
+        }
+        
+        .login-slide-img.active {
+            opacity: 1;
+        }
+        
+        .menu-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            grid-template-rows: auto auto auto;
+            gap: 15px;
+            width: 100%;
+            flex-grow: 1;
+            margin: 10px 0;
+            overflow-y: auto;
+            padding: 5px;
+        }
+        
+        .menu-item {
+            background: white;
+            border-radius: 20px;
+            cursor: pointer;
+            transition: 0.3s;
+            box-shadow: 0 5px 15px rgba(255, 107, 129, 0.1);
+            border: 2px solid transparent;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            height: 110px;
+            width: 100%;
+        }
+        
+        .menu-item:hover {
+            transform: scale(0.98);
+            border-color: #ff9a9e;
+            background: #fff5f7;
+        }
+        
+        .icon {
+            font-size: clamp(2rem, 4vw, 3rem);
+            margin-bottom: 5px;
+        }
+        
+        .menu-item span {
+            font-size: 1rem;
+            font-weight: bold;
+            color: #ff6b81;
+        }
+        
+        .countdown-wrapper,
+        #anniversary-timer-container {
+            background: #fff0f5;
+            padding: 15px;
+            border-radius: 20px;
+            border: 2px dashed #ff9a9e;
+            margin: 10px 0;
+            width: 90%;
+            flex-shrink: 0;
+            box-shadow: 0 5px 15px rgba(255, 107, 129, 0.1);
+        }
+        
+        .countdown-title {
+            font-size: 1.1rem;
+            color: #ff6b81;
+            margin-bottom: 5px;
+            font-weight: bold;
+        }
+        
+        .time-box {
+            display: flex;
+            justify-content: center;
+            gap: 10px;
+        }
+        
+        .time-unit {
+            background: white;
+            padding: 8px;
+            border-radius: 10px;
+            min-width: 50px;
+            box-shadow: 0 3px 8px rgba(0, 0, 0, 0.05);
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+        }
+        
+        .time-unit span {
+            font-size: 1.4rem;
+            font-weight: bold;
+            color: #d63384;
+            line-height: 1;
+        }
+        
+        .time-unit small {
+            font-size: 0.8rem;
+            color: #888;
+            margin-top: 2px;
+        }
+        
+        .cake-container {
+            margin-top: 10px;
+            text-align: center;
+        }
+        
+        .cake-img {
+            height: 150px;
+            width: 150px;
+            object-fit: cover;
+            border-radius: 50%;
+            border: 5px solid white;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+            transition: 0.5s;
+            cursor: pointer;
+        }
+        
+        .wishes-card {
+            display: none;
+            background: #fff;
+            border: 2px solid #ff9a9e;
+            padding: 20px;
+            border-radius: 15px;
+            width: 90%;
+            margin-top: 20px;
+            text-align: left;
+            box-shadow: 0 5px 20px rgba(255, 107, 129, 0.15);
+            animation: slideUp 0.8s ease;
+            height: auto;
+            max-height: none;
+            overflow: visible;
+        }
+        
+        #wishes-text {
+            color: #555;
+            font-size: 1.15rem;
+            line-height: 1.7;
+        }
+        
+        .gift-box {
+            font-size: 80px;
+            cursor: pointer;
+            animation: shake 2s infinite;
+            display: none;
+            margin-top: 20px;
+        }
+        
+        @keyframes shake {
+            0%,
+            100% {
+                transform: rotate(0deg);
+            }
+            25% {
+                transform: rotate(-10deg);
+            }
+            75% {
+                transform: rotate(10deg);
+            }
+        }
+        
+        .coupon-card {
+            display: none;
+            background: linear-gradient(45deg, #ff9a9e, #fad0c4);
+            color: white;
+            padding: 20px;
+            border-radius: 15px;
+            margin-top: 20px;
+            width: 80%;
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
+            animation: zoomIn 0.5s;
+        }
+        
+        .timeline-container {
+            width: 90%;
+            margin-top: 20px;
+            text-align: left;
+            position: relative;
+            padding-left: 20px;
+        }
+        
+        .timeline-item {
+            position: relative;
+            padding-left: 20px;
+            padding-bottom: 20px;
+            border-left: 2px solid #ff9a9e;
+        }
+        
+        .timeline-item::before {
+            content: '❤️';
+            position: absolute;
+            left: -11px;
+            top: 0;
+            background: #fff;
+            padding: 2px;
+            font-size: 12px;
+        }
+        
+        .timeline-date {
+            font-weight: bold;
+            color: #ff6b81;
+            font-size: 0.9rem;
+        }
+        
+        .timeline-content {
+            font-size: 0.95rem;
+            color: #555;
+            background: #fff;
+            padding: 10px;
+            border-radius: 8px;
+            margin-top: 5px;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
+        }
+        
+        .quiz-box {
+            width: 90%;
+            text-align: center;
+            background: white;
+            padding: 30px;
+            border-radius: 20px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15);
+            border: 3px solid #ffdde1;
+        }
+        
+        .quiz-question {
+            font-size: 1.5rem;
+            color: #ff6b81;
+            margin-bottom: 25px;
+            font-weight: bold;
+            text-shadow: 1px 1px 0px #fff;
+        }
+        
+        .quiz-options {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+        
+        .quiz-btn {
+            padding: 15px;
+            border: none;
+            border-radius: 50px;
+            background: #ffecf2;
+            cursor: pointer;
+            transition: 0.3s;
+            font-family: 'Itim';
+            font-size: 1.2rem;
+            color: #555;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+        }
+        
+        .quiz-btn:hover {
+            background: #ff6b81;
+            color: white;
+            transform: scale(1.03);
+            box-shadow: 0 6px 12px rgba(255, 107, 129, 0.3);
+        }
+        
+        .quiz-result {
+            display: none;
+            margin-top: 20px;
+            font-size: 1.1rem;
+            color: #d63384;
+            animation: slideUp 0.5s;
+        }
+        
+        .gallery-scroll {
+            display: flex;
+            overflow-x: auto;
+            gap: 20px;
+            padding: 20px;
+            width: 100%;
+            height: 80%;
+            align-items: center;
+            scroll-behavior: smooth;
+        }
+        
+        .gallery-item {
+            min-width: 250px;
+            height: 350px;
+            background: white;
+            padding: 10px 10px 50px 10px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+            transform: rotate(2deg);
+            transition: 0.3s;
+            flex-shrink: 0;
+            border-radius: 5px;
+            cursor: pointer;
+            animation: breathe 3s ease-in-out infinite alternate;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .gallery-item:nth-child(even) {
+            transform: rotate(-2deg);
+            animation-delay: 1.5s;
+        }
+        
+        .gallery-item:hover {
+            transform: scale(1.05) rotate(0deg) !important;
+            z-index: 10;
+            animation: none;
+        }
+        
+        .gallery-item img,
+        .gallery-item video {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            border-radius: 3px;
+        }
+        
+        .gallery-item::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -75%;
+            width: 50%;
+            height: 100%;
+            background: linear-gradient(to right, rgba(255, 255, 255, 0) 0%, rgba(255, 255, 255, 0.3) 100%);
+            transform: skewX(-25deg);
+            animation: shine 4s infinite;
+            pointer-events: none;
+            z-index: 5;
+        }
+        
+        @keyframes shine {
+            0% {
+                left: -75%;
+            }
+            20% {
+                left: 125%;
+            }
+            100% {
+                left: 125%;
+            }
+        }
+        
+        @keyframes breathe {
+            0% {
+                transform: scale(1) rotate(2deg);
+            }
+            100% {
+                transform: scale(1.02) rotate(2deg);
+            }
+        }
+        
+        .letter-paper {
+            background: #fff;
+            padding: 40px;
+            border-radius: 15px;
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.1);
+            width: 90%;
+            height: 75%;
+            overflow-y: auto;
+            text-align: left;
+            position: relative;
+            font-family: 'Sarabun', sans-serif;
+            font-size: 1.1rem;
+            line-height: 1.8;
+            color: #555;
+            border: 1px solid #f0f0f0;
+        }
+        
+        .letter-icon {
+            text-align: center;
+            font-size: 2.5rem;
+            margin-bottom: 10px;
+            color: #ff6b81;
+        }
+        
+        .letter-paper::-webkit-scrollbar {
+            width: 8px;
+        }
+        
+        .letter-paper::-webkit-scrollbar-thumb {
+            background: #ffb3c6;
+            border-radius: 4px;
+        }
+        
+        .bucket-list-container {
+            width: 95%;
+            background: white;
+            padding: 20px;
+            border-radius: 20px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+            height: 75%;
+        }
+        
+        .task-input-group {
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+            justify-content: center;
+        }
+        
+        .task-input {
+            flex: 1;
+            padding: 12px;
+            border-radius: 50px;
+            border: 2px solid #ffdde1;
+            outline: none;
+            font-family: 'Itim';
+            color: #ff6b81;
+            font-size: 1.1rem;
+            text-align: left;
+            margin: 0;
+            min-width: 150px;
+        }
+        
+        .task-btn-add {
+            padding: 0 20px;
+            border-radius: 50px;
+            border: none;
+            background: #ff9a9e;
+            color: white;
+            cursor: pointer;
+            font-size: 1.5rem;
+            transition: 0.2s;
+            white-space: nowrap;
+        }
+        
+        .task-btn-add:hover {
+            transform: scale(1.1);
+        }
+        
+        .task-list {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+            overflow-y: auto;
+            flex-grow: 1;
+        }
+        
+        .task-list::-webkit-scrollbar {
+            width: 5px;
+        }
+        
+        .task-list::-webkit-scrollbar-thumb {
+            background: #ffb3c6;
+            border-radius: 10px;
+        }
+        
+        .task-item {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            background: #fff0f5;
+            padding: 10px 15px;
+            border-radius: 15px;
+            margin-bottom: 10px;
+            animation: slideUp 0.3s ease;
+            border: 1px solid #ffeef0;
+            transition: 0.2s;
+        }
+        
+        .task-item:hover {
+            transform: scale(1.01);
+            border-color: #ff9a9e;
+        }
+        
+        .task-text {
+            flex: 1;
+            font-size: 1.1rem;
+            color: #555;
+            cursor: pointer;
+            margin-left: 10px;
+            text-align: left;
+        }
+        
+        .task-item.completed .task-text {
+            text-decoration: line-through;
+            color: #aaa;
+        }
+        
+        .task-item.completed {
+            background: #f0f0f0;
+            opacity: 0.8;
+        }
+        
+        .delete-btn {
+            background: none;
+            border: none;
+            color: #ff7675;
+            cursor: pointer;
+            font-size: 1.2rem;
+            margin-left: 10px;
+            transition: 0.2s;
+        }
+        
+        .delete-btn:hover {
+            transform: scale(1.2);
+        }
+        
+        .checkbox-custom {
+            width: 20px;
+            height: 20px;
+            border: 2px solid #ff9a9e;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+        }
+        
+        .task-item.completed .checkbox-custom {
+            background: #ff9a9e;
+        }
+        
+        .task-item.completed .checkbox-custom::after {
+            content: '✔';
+            color: white;
+            font-size: 12px;
+        }
+        
+        .reasons-container {
+            width: 90%;
+            height: 60%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            perspective: 1000px;
+            margin-bottom: 20px;
+        }
+        
+        .reason-card {
+            width: 100%;
+            height: 100%;
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+            text-align: center;
+            transition: transform 0.6s;
+            transform-style: preserve-3d;
+            cursor: pointer;
+            position: relative;
+        }
+        
+        .reason-card.flipped {
+            transform: rotateY(180deg);
+        }
+        
+        .reason-front,
+        .reason-back {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            backface-visibility: hidden;
+            border-radius: 20px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .reason-front {
+            background: #fff0f5;
+            color: #ff6b81;
+            font-size: 1.5rem;
+            font-weight: bold;
+            border: 2px dashed #ff9a9e;
+        }
+        
+        .reason-back {
+            background: white;
+            color: #555;
+            transform: rotateY(180deg);
+            padding: 30px;
+            box-sizing: border-box;
+            font-size: 1.3rem;
+            border: 2px solid #ff9a9e;
+        }
+        
+        .refresh-reason-btn {
+            margin-top: 15px;
+            padding: 10px 20px;
+            border-radius: 50px;
+            border: 2px solid #ff9a9e;
+            background: white;
+            color: #ff6b81;
+            cursor: pointer;
+            transition: 0.2s;
+        }
+        
+        .refresh-reason-btn:hover {
+            background: #ff9a9e;
+            color: white;
+        }
+        
+        .coupons-grid {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 15px;
+            width: 95%;
+            height: 65%;
+            overflow-y: auto;
+            padding: 5px;
+            margin-top: 10px;
+        }
+        
+        .coupons-grid::-webkit-scrollbar {
+            width: 5px;
+        }
+        
+        .coupons-grid::-webkit-scrollbar-thumb {
+            background: #ffb3c6;
+            border-radius: 10px;
+        }
+        
+        .coupon-item {
+            background: white;
+            border: 2px dashed #ff9a9e;
+            border-radius: 15px;
+            padding: 15px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+            overflow: hidden;
+            transition: 0.3s;
+        }
+        
+        .coupon-item::before,
+        .coupon-item::after {
+            content: '';
+            position: absolute;
+            width: 20px;
+            height: 20px;
+            background: #fff0f5;
+            border-radius: 50%;
+            top: 50%;
+            transform: translateY(-50%);
+        }
+        
+        .coupon-item::before {
+            left: -10px;
+        }
+        
+        .coupon-item::after {
+            right: -10px;
+        }
+        
+        .coupon-title {
+            font-size: 1.2rem;
+            font-weight: bold;
+            color: #ff6b81;
+            margin-bottom: 5px;
+        }
+        
+        .coupon-desc {
+            font-size: 0.9rem;
+            color: #777;
+            margin-bottom: 10px;
+        }
+        
+        .use-coupon-btn {
+            padding: 5px 15px;
+            border-radius: 20px;
+            border: none;
+            background: #ff9a9e;
+            color: white;
+            cursor: pointer;
+            font-size: 0.9rem;
+        }
+        
+        .coupon-item.used {
+            opacity: 0.6;
+            filter: grayscale(1);
+            pointer-events: none;
+        }
+        
+        .coupon-item.used::after {
+            content: 'USED';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%) rotate(-15deg);
+            font-size: 3rem;
+            color: rgba(0, 0, 0, 0.2);
+            font-weight: bold;
+            border: 3px solid rgba(0, 0, 0, 0.2);
+            padding: 5px 10px;
+            border-radius: 10px;
+            display: block;
+            width: auto;
+            height: auto;
+            background: transparent;
+        }
+        
+        .delete-card-btn {
+            position: absolute;
+            top: 5px;
+            right: 5px;
+            background: rgba(255, 0, 0, 0.1);
+            border: none;
+            color: #ff7675;
+            border-radius: 50%;
+            width: 25px;
+            height: 25px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 14px;
+            z-index: 10;
+            transition: 0.2s;
+        }
+        
+        .delete-card-btn:hover {
+            background: #ff7675;
+            color: white;
+        }
+        
+        .envelopes-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 15px;
+            width: 95%;
+            height: 65%;
+            overflow-y: auto;
+            padding: 5px;
+            margin-top: 10px;
+        }
+        
+        .envelopes-grid::-webkit-scrollbar {
+            width: 5px;
+        }
+        
+        .envelopes-grid::-webkit-scrollbar-thumb {
+            background: #ffb3c6;
+            border-radius: 10px;
+        }
+        
+        .envelope-item {
+            background: #fff;
+            border-radius: 10px;
+            padding: 15px;
+            text-align: center;
+            cursor: pointer;
+            box-shadow: 0 5px 10px rgba(0, 0, 0, 0.1);
+            transition: 0.3s;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            height: 120px;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .envelope-item:hover {
+            transform: translateY(-5px);
+        }
+        
+        .envelope-icon {
+            font-size: 3rem;
+            margin-bottom: 5px;
+            transition: 0.3s;
+        }
+        
+        .envelope-item:hover .envelope-icon {
+            transform: scale(1.1);
+        }
+        
+        .envelope-label {
+            font-size: 1rem;
+            color: #555;
+            font-weight: bold;
+        }
+        
+        .envelope-item::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 5px;
+            background: repeating-linear-gradient(45deg, #ff9a9e, #ff9a9e 10px, white 10px, white 20px, #74b9ff 20px, #74b9ff 30px, white 30px, white 40px);
+        }
+        
+        .diary-entry {
+            background: #fff;
+            border: 1px solid #f0f0f0;
+            padding: 15px;
+            border-radius: 15px;
+            margin-bottom: 10px;
+            text-align: left;
+            position: relative;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
+            animation: slideUp 0.3s ease;
+        }
+        
+        .diary-date {
+            font-size: 0.85rem;
+            color: #ff9a9e;
+            font-weight: bold;
+            margin-bottom: 5px;
+        }
+        
+        .diary-content {
+            font-size: 1rem;
+            color: #555;
+            white-space: pre-line;
+        }
+        
+        .scratch-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+            width: 95%;
+            height: 65%;
+            overflow-y: auto;
+            padding: 10px;
+        }
+        
+        .scratch-card-container {
+            position: relative;
+            width: 100%;
+            height: 150px;
+            background: white;
+            border-radius: 10px;
+            overflow: hidden;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+            user-select: none;
+        }
+        
+        .scratch-content {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            z-index: 1;
+            color: #ff6b81;
+            font-weight: bold;
+            padding: 10px;
+            box-sizing: border-box;
+        }
+        
+        .scratch-canvas {
+            position: absolute;
+            top: 0;
+            left: 0;
+            z-index: 2;
+            cursor: pointer;
+            width: 100%;
+            height: 100%;
+        }
+        
+        .capsule-container {
+            width: 100%;
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+        
+        .capsule-list {
+            width: 95%;
+            flex-grow: 1;
+            overflow-y: auto;
+            padding: 10px;
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 15px;
+        }
+        
+        .capsule-item {
+            background: white;
+            border: 2px solid #fab1a0;
+            border-radius: 15px;
+            padding: 15px;
+            position: relative;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            height: 120px;
+            cursor: pointer;
+            transition: 0.3s;
+            box-shadow: 0 5px 10px rgba(0, 0, 0, 0.05);
+        }
+        
+        .capsule-item:hover {
+            transform: translateY(-3px);
+            border-color: #ff7675;
+        }
+        
+        .capsule-icon {
+            font-size: 2.5rem;
+            margin-bottom: 5px;
+        }
+        
+        .capsule-date {
+            font-size: 0.85rem;
+            color: #d63384;
+            font-weight: bold;
+        }
+        
+        .capsule-lock {
+            font-size: 1.5rem;
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            opacity: 0;
+            transition: 0.3s;
+            color: #555;
+        }
+        
+        .capsule-item.locked {
+            filter: grayscale(0.8);
+            opacity: 0.8;
+        }
+        
+        .capsule-item.locked .capsule-icon {
+            opacity: 0.2;
+        }
+        
+        .capsule-item.locked .capsule-lock {
+            opacity: 1;
+        }
+        
+        #page-wish {
+            background: linear-gradient(to bottom, #0f2027, #203a43, #2c5364);
+            color: white;
+        }
+        
+        .stars-container {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            overflow: hidden;
+            pointer-events: none;
+            z-index: 0;
+        }
+        
+        .star {
+            position: absolute;
+            width: 2px;
+            height: 2px;
+            background: white;
+            border-radius: 50%;
+            animation: twinkle 2s infinite;
+        }
+        
+        .wish-lantern {
+            position: absolute;
+            width: 40px;
+            height: 55px;
+            background: radial-gradient(#ffeb3b, #ff9800);
+            border-radius: 50% 50% 10px 10px;
+            opacity: 0.8;
+            animation: floatUpLantern 15s linear forwards;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-size: 12px;
+            color: transparent;
+            cursor: pointer;
+            box-shadow: 0 0 20px #ff9800;
+        }
+        
+        .wish-lantern:hover {
+            transform: scale(1.2);
+            z-index: 10;
+            color: black;
+            font-weight: bold;
+        }
+        
+        @keyframes twinkle {
+            0%,
+            100% {
+                opacity: 0.2;
+            }
+            50% {
+                opacity: 1;
+            }
+        }
+        
+        @keyframes floatUpLantern {
+            to {
+                transform: translateY(-120vh);
+                opacity: 0;
+            }
+        }
+        
+        .wheel-container {
+            position: relative;
+            width: 300px;
+            height: 300px;
+            margin: 20px auto;
+        }
+        
+        .wheel {
+            width: 100%;
+            height: 100%;
+            border-radius: 50%;
+            border: 10px solid white;
+            box-shadow: 0 0 20px rgba(0, 0, 0, 0.2);
+            transition: transform 4s cubic-bezier(0.17, 0.67, 0.12, 0.99);
+            position: relative;
+            overflow: hidden;
+            background: #fff;
+        }
+        
+        .wheel-section {
+            position: absolute;
+            width: 50%;
+            height: 50%;
+            top: 50%;
+            left: 50%;
+            transform-origin: 0% 0%;
+            border: 1px solid white;
+            box-sizing: border-box;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .wheel-text {
+            position: absolute;
+            left: 20px;
+            top: 30px;
+            transform: rotate(45deg);
+            font-weight: bold;
+            color: white;
+            font-size: 14px;
+            width: 100px;
+            text-align: center;
+        }
+        
+        .wheel-pointer {
+            position: absolute;
+            top: -20px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 0;
+            height: 0;
+            border-left: 15px solid transparent;
+            border-right: 15px solid transparent;
+            border-top: 30px solid #ff4757;
+            z-index: 10;
+        }
+        
+        .spin-btn {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 60px;
+            height: 60px;
+            background: white;
+            border-radius: 50%;
+            border: 4px solid #ff4757;
+            color: #ff4757;
+            font-weight: bold;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            z-index: 10;
+            font-size: 1.2rem;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
+        }
+        
+        .wheel-reward-list {
+            margin-top: 15px;
+            width: 90%;
+            max-height: 150px;
+            overflow-y: auto;
+            background: white;
+            border-radius: 10px;
+            padding: 10px;
+        }
+        
+        .reward-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 5px 0;
+            border-bottom: 1px solid #eee;
+            font-size: 0.9rem;
+        }
+        
+        .chat-box {
+            height: 60vh;
+            overflow-y: auto;
+            background: #f1f2f6;
+            border-radius: 15px;
+            padding: 15px;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            border: 1px solid #ddd;
+        }
+        
+        .chat-msg {
+            max-width: 70%;
+            padding: 10px 15px;
+            border-radius: 20px;
+            font-size: 1rem;
+            line-height: 1.4;
+            word-wrap: break-word;
+            animation: slideUp 0.2s ease;
+        }
+        
+        .msg-user {
+            align-self: flex-end;
+            background: #ff9a9e;
+            color: white;
+            border-bottom-right-radius: 5px;
+        }
+        
+        .msg-bot {
+            align-self: flex-start;
+            background: white;
+            color: #555;
+            border: 1px solid #eee;
+            border-bottom-left-radius: 5px;
+        }
+        
+        .chat-input-area {
+            display: flex;
+            gap: 10px;
+            margin-top: 10px;
+            width: 100%;
+        }
+        
+        .chat-reset-btn {
+            font-size: 1.2rem;
+            cursor: pointer;
+            background: none;
+            border: none;
+            margin-left: 10px;
+        }
+        
+        .notes-grid {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 15px;
+            justify-content: center;
+            align-items: flex-start;
+            padding: 10px;
+            overflow-y: auto;
+            height: 65vh;
+        }
+        
+        .sticky-note {
+            width: 140px;
+            height: 140px;
+            background: #fff740;
+            box-shadow: 2px 2px 10px rgba(0, 0, 0, 0.1);
+            padding: 15px;
+            font-family: 'Itim';
+            font-size: 1rem;
+            position: relative;
+            transition: 0.3s;
+            color: #333;
+            overflow-wrap: break-word;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+        }
+        
+        .sticky-note:nth-child(even) {
+            transform: rotate(2deg);
+            background: #ff7eb9;
+            color: white;
+        }
+        
+        .sticky-note:nth-child(3n) {
+            transform: rotate(-3deg);
+            background: #7afcff;
+            color: #333;
+        }
+        
+        .sticky-note:hover {
+            transform: scale(1.1) rotate(0deg);
+            z-index: 10;
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
+        }
+        
+        .delete-note-btn {
+            position: absolute;
+            top: 5px;
+            right: 5px;
+            background: none;
+            border: none;
+            font-size: 1.2rem;
+            cursor: pointer;
+            color: inherit;
+            opacity: 0.7;
+        }
+        
+        .delete-note-btn:hover {
+            opacity: 1;
+        }
+        
+        .card-container {
+            perspective: 1000px;
+            width: 260px;
+            height: 380px;
+            margin: 20px auto;
+            cursor: pointer;
+        }
+        
+        .card-inner {
+            position: relative;
+            width: 100%;
+            height: 100%;
+            text-align: center;
+            transition: transform 0.8s;
+            transform-style: preserve-3d;
+        }
+        
+        .card-inner.flipped {
+            transform: rotateY(180deg);
+        }
+        
+        .card-front,
+        .card-back {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            backface-visibility: hidden;
+            border-radius: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15);
+            border: 5px solid white;
+            box-sizing: border-box;
+        }
+        
+        .card-front {
+            background: linear-gradient(45deg, #ff9a9e, #fad0c4);
+            color: white;
+            font-size: 3rem;
+            flex-direction: column;
+        }
+        
+        .card-back {
+            background: white;
+            color: #555;
+            transform: rotateY(180deg);
+            font-size: 1.4rem;
+            font-weight: bold;
+            line-height: 1.6;
+            position: relative;
+        }
+        
+        .card-controls {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            display: flex;
+            gap: 5px;
+        }
+        
+        .card-btn {
+            background: none;
+            border: none;
+            cursor: pointer;
+            font-size: 1.2rem;
+            opacity: 0.6;
+            transition: 0.2s;
+        }
+        
+        .card-btn:hover {
+            opacity: 1;
+            transform: scale(1.2);
+        }
+        
+        #goodnight-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: radial-gradient(circle at bottom, #1b2735 0%, #090a0f 100%);
+            z-index: 9999;
+            display: none;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            color: white;
+            animation: fadeIn 1s;
+        }
+        
+        .moon {
+            font-size: 100px;
+            margin-bottom: 20px;
+            animation: glow 2s infinite alternate;
+            text-shadow: 0 0 20px #fff;
+        }
+        
+        .star-overlay {
+            position: absolute;
+            background: white;
+            border-radius: 50%;
+            opacity: 0.8;
+            animation: twinkle 2s infinite;
+        }
+        
+        .goodnight-msg {
+            font-size: 2rem;
+            margin-bottom: 30px;
+            text-shadow: 0 0 10px rgba(255, 255, 255, 0.5);
+        }
+        
+        .wake-btn {
+            padding: 10px 30px;
+            border-radius: 50px;
+            border: 1px solid white;
+            background: transparent;
+            color: white;
+            cursor: pointer;
+            transition: 0.3s;
+        }
+        
+        .wake-btn:hover {
+            background: white;
+            color: #090a0f;
+        }
+        
+        @keyframes glow {
+            from {
+                text-shadow: 0 0 10px #fff;
+                transform: scale(1);
+            }
+            to {
+                text-shadow: 0 0 30px #fff, 0 0 10px #ffeb3b;
+                transform: scale(1.05);
+            }
+        }
+        
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+            }
+            to {
+                opacity: 1;
+            }
+        }
+        
+        .pet-container {
+            width: 95%;
+            height: 80%;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+        }
+        
+        .pet-avatar {
+            font-size: 8rem;
+            animation: wiggle 2s infinite ease-in-out;
+            cursor: pointer;
+            transition: transform 0.2s;
+            margin-bottom: 10px;
+            filter: drop-shadow(0 5px 10px rgba(0, 0, 0, 0.1));
+        }
+        
+        .pet-avatar:active {
+            transform: scale(0.9);
+        }
+        
+        .pet-name {
+            font-size: 1.5rem;
+            font-weight: bold;
+            color: #ff6b81;
+            margin-bottom: 5px;
+            cursor: pointer;
+            border-bottom: 1px dashed #ccc;
+        }
+        
+        .love-bar-container {
+            width: 80%;
+            height: 20px;
+            background: #eee;
+            border-radius: 50px;
+            overflow: hidden;
+            border: 2px solid #ffdde1;
+            margin-bottom: 10px;
+            position: relative;
+        }
+        
+        .love-bar {
+            height: 100%;
+            background: linear-gradient(90deg, #ff9a9e, #fad0c4);
+            width: 50%;
+            transition: width 0.5s ease;
+        }
+        
+        .love-text {
+            font-size: 0.9rem;
+            color: #555;
+            margin-bottom: 20px;
+        }
+        
+        .pet-actions {
+            display: flex;
+            gap: 10px;
+        }
+        
+        .pet-btn {
+            padding: 8px 15px;
+            border-radius: 20px;
+            border: none;
+            background: white;
+            color: #ff6b81;
+            border: 1px solid #ff6b81;
+            cursor: pointer;
+            font-family: 'Itim';
+            transition: 0.2s;
+        }
+        
+        .pet-btn:hover {
+            background: #ff6b81;
+            color: white;
+        }
+        
+        .pet-selection {
+            display: flex;
+            gap: 20px;
+        }
+        
+        .select-pet-btn {
+            font-size: 4rem;
+            cursor: pointer;
+            padding: 20px;
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+            border: 2px solid transparent;
+            transition: 0.2s;
+        }
+        
+        .select-pet-btn:hover {
+            transform: scale(1.1);
+            border-color: #ff9a9e;
+        }
+        
+        @keyframes wiggle {
+            0%,
+            100% {
+                transform: rotate(-5deg);
+            }
+            50% {
+                transform: rotate(5deg);
+            }
+        }
+        
+        @keyframes heartPop {
+            0% {
+                transform: scale(1);
+                opacity: 1;
+            }
+            100% {
+                transform: scale(2);
+                opacity: 0;
+            }
+        }
+        
+        .text-box {
+            background: white;
+            width: 90%;
+            padding: 30px;
+            border-radius: 20px;
+            box-shadow: inset 0 0 10px rgba(0, 0, 0, 0.05);
+            text-align: left;
+            font-size: 1.3rem;
+            color: #555;
+            height: auto;
+            max-height: none;
+            margin-bottom: 20px;
+        }
+        
+        .nav-btn {
+            padding: 12px 35px;
+            border-radius: 50px;
+            border: none;
+            background: linear-gradient(45deg, #ff9a9e 0%, #fad0c4 100%);
+            color: white;
+            font-size: 1.3rem;
+            font-family: 'Itim';
+            cursor: pointer;
+            box-shadow: 0 5px 10px rgba(255, 107, 129, 0.2);
+            transition: 0.2s;
+            flex-shrink: 0;
+            margin-top: 5px;
+            margin-bottom: 20px;
+        }
+        
+        .nav-btn:hover {
+            transform: translateY(-3px);
+        }
+        
+        input[type="password"] {
+            padding: 15px 20px;
+            width: 70%;
+            border-radius: 50px;
+            border: 2px solid #ffdde1;
+            background: rgba(255, 255, 255, 0.95);
+            font-size: 1.4rem;
+            color: #ff6b81;
+            outline: none;
+            transition: all 0.3s ease;
+            box-shadow: 0 5px 15px rgba(255, 154, 158, 0.2);
+            text-align: center;
+            letter-spacing: 2px;
+            margin-bottom: 20px;
+            font-family: 'Itim';
+            margin-left: auto;
+            margin-right: auto;
+            display: block;
+        }
+        
+        input[type="password"]:focus {
+            border-color: #ff6b81;
+            box-shadow: 0 0 20px rgba(255, 107, 129, 0.4);
+            transform: scale(1.05);
+        }
+        
+        input::placeholder {
+            color: #ffb7b2;
+        }
+        
+        @keyframes slideUp {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+        
+        @media (max-width: 768px) {
+            .container {
+                width: 95vw;
+                height: 95vh;
+                padding: 15px;
+            }
+            .split-layout {
+                flex-direction: column;
+            }
+            .split-left {
+                height: 40%;
+                width: 100%;
+            }
+            .split-right {
+                height: 60%;
+                width: 100%;
+                overflow-y: auto;
+            }
+            .photo-frame,
+            .anniversary-slideshow,
+            .login-slideshow {
+                height: 100%;
+                width: 80%;
+            }
+            .login-img {
+                height: 100%;
+            }
+            .menu-grid,
+            .envelopes-grid,
+            .coupons-grid,
+            .scratch-grid,
+            .capsule-list,
+            .notes-grid {
+                grid-template-columns: 1fr 1fr;
+            }
+            .task-input-group {
+                flex-direction: column;
+            }
+            .task-input {
+                width: 100%;
+            }
+        }
+        /* 🔥 CSS ใหม่สำหรับปุ่มแก้ไข (Edit) 🔥 */
+        
+        .edit-btn {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            background: rgba(255, 255, 255, 0.8);
+            border-radius: 50%;
+            border: none;
+            cursor: pointer;
+            transition: 0.3s;
+            width: 35px;
+            height: 35px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+        }
+        
+        .edit-btn:hover {
+            transform: scale(1.1) rotate(10deg);
+            background: #ff9a9e;
+            color: white;
+        }
+        
+        .editable-content {
+            outline: none;
+            transition: 0.3s;
+            border-radius: 10px;
+            padding: 5px;
+        }
+        
+        .editable-content[contenteditable="true"] {
+            background: rgba(255, 240, 245, 0.5);
+            border: 2px dashed #ff9a9e;
+            box-shadow: 0 0 10px rgba(255, 154, 158, 0.3);
+        }
+    </style>
+</head>
+
+<body>
+
+    <audio id="bg-music" loop>
+        <source src="" type="audio/mp3">
+    </audio>
+
+    <div id="heart-container"></div>
+    <div id="balloon-container"></div>
+    <div id="rose-container"></div>
+
+    <div id="goodnight-overlay">
+        <div class="moon">🌙</div>
+        <div class="goodnight-msg">ฝันดีนะคะคนเก่ง... 💤<br>พรุ่งนี้เจอกันใหม่นะ ❤️</div>
+        <div id="gn-stars"></div>
+        <button class="wake-btn" onclick="toggleGoodnight()">ตื่นแล้ว! ☀️</button>
+    </div>
+
+    <div class="music-control" onclick="toggleMusic()">🎵</div>
+
+    <div class="container" id="main-container">
+
+        <div id="page-login" class="page active">
+            <div class="split-layout">
+                <div class="split-left">
+                    <div class="login-slideshow">
+                        <img class="login-slide-img active" src="login1.jpg">
+                        <img class="login-slide-img" src="login2.jpg">
+                        <img class="login-slide-img" src="login3.jpg">
+                    </div>
+                </div>
+                <div class="split-right" style="justify-content: center;">
+                    <h1>Welcome My Love</h1>
+                    <p style="margin-bottom: 25px; color: #777;">ใส่รหัสวันครบรอบของเรา (100365)</p>
+                    <input type="password" id="passInput" placeholder="รหัสหัวใจ" onkeyup="if(event.key === 'Enter') checkPassword()">
+                    <button class="nav-btn" onclick="checkPassword()">เข้าสู่หัวใจ ❤️</button>
+                    <p id="error-msg" style="color:#ff4757; display:none; margin-top:10px;">รหัสผิดจ้า!</p>
+                </div>
+            </div>
+        </div>
+
+        <div id="page-menu" class="page">
+            <h1>เมนูแห่งความรัก 💖</h1>
+            <div class="menu-grid">
+                <div class="menu-item" onclick="goToPage('page-anniversary')">
+                    <span class="icon">📅</span> <span>วันครบรอบ</span>
+                </div>
+                <div class="menu-item" onclick="goToPage('page-gallery')">
+                    <span class="icon">📸</span> <span>รูปของเรา</span>
+                </div>
+                <div class="menu-item" onclick="goToPage('page-letter')">
+                    <span class="icon">💌</span> <span>จดหมาย</span>
+                </div>
+                <div class="menu-item" onclick="goToPage('page-birthday')">
+                    <span class="icon">🎂</span> <span>วันเกิดเธอ</span>
+                </div>
+                <div class="menu-item" onclick="goToPage('page-quiz')">
+                    <span class="icon">❓</span> <span>เกมทายใจ</span>
+                </div>
+                <div class="menu-item" onclick="showLoveBattery()">
+                    <span class="icon">💖</span> <span>เติมกำลังใจ</span>
+                </div>
+                <div class="menu-item" onclick="goToPage('page-bucketlist')">
+                    <span class="icon">📝</span> <span>สิ่งที่อยากทำ</span>
+                </div>
+                <div class="menu-item" onclick="goToPage('page-reasons')">
+                    <span class="icon">💯</span> <span>100 เหตุผล</span>
+                </div>
+                <div class="menu-item" onclick="goToPage('page-coupons')">
+                    <span class="icon">🎫</span> <span>คูปองรัก</span>
+                </div>
+                <div class="menu-item" onclick="goToPage('page-openwhen')">
+                    <span class="icon">✉️</span> <span>Open When...</span>
+                </div>
+                <div class="menu-item" onclick="goToPage('page-diary')">
+                    <span class="icon">📝</span> <span>ไดอารี่รัก</span>
+                </div>
+                <div class="menu-item" onclick="goToPage('page-scratch')">
+                    <span class="icon">🎰</span> <span>บัตรขูดลุ้นรัก</span>
+                </div>
+                <div class="menu-item" onclick="goToPage('page-capsule')">
+                    <span class="icon">💊</span> <span>Time Capsule</span>
+                </div>
+                <div class="menu-item" onclick="goToPage('page-wish')">
+                    <span class="icon">🌌</span> <span>Make a Wish</span>
+                </div>
+                <div class="menu-item" onclick="goToPage('page-wheel')">
+                    <span class="icon">🎡</span> <span>Wheel of Love</span>
+                </div>
+                <div class="menu-item" onclick="goToPage('page-pet')">
+                    <span class="icon">🐻</span> <span>Love Pet</span>
+                </div>
+                <div class="menu-item" onclick="goToPage('page-chat')">
+                    <span class="icon">💬</span> <span>Love Chatbot</span>
+                </div>
+                <div class="menu-item" onclick="goToPage('page-notes')">
+                    <span class="icon">📌</span> <span>Sticky Notes</span>
+                </div>
+                <div class="menu-item" onclick="goToPage('page-deeptalk')">
+                    <span class="icon">🃏</span> <span>Deep Talk Cards</span>
+                </div>
+                <div class="menu-item" onclick="toggleGoodnight()" style="background:#2c3e50; border-color:#34495e;">
+                    <span class="icon">🛌</span> <span style="color:white;">Goodnight</span>
+                </div>
+            </div>
+            <button class="nav-btn" onclick="logout()" style="background:#e0e0e0; color:#666;">🔒 ล็อกหน้าจอ</button>
+        </div>
+
+        <div id="page-anniversary" class="page">
+            <div class="split-layout">
+                <div class="split-left">
+                    <div class="anniversary-slideshow">
+                        <img class="anni-slide-img active" src="anni1.jpg">
+                        <img class="anni-slide-img" src="anni2.jpg">
+                        <img class="anni-slide-img" src="anni3.jpg">
+                        <img class="anni-slide-img" src="anni4.jpg">
+                        <img class="anni-slide-img" src="anni5.jpg">
+                    </div>
+                </div>
+                <div class="split-right">
+                    <h1 class="glow-text">Happy Anniversary! 🎉</h1>
+                    <p style="font-size:1.4rem; color:#d63384; font-weight:bold; margin-bottom:10px;">10 มีนาคม 2565</p>
+
+                    <div class="text-box" style="position: relative;">
+                        <button onclick="toggleEdit('anni-msg-content', 'anniversary')" class="edit-btn">✏️</button>
+                        <div id="anni-msg-content" class="editable-content">
+                            <p>สุขสันต์วันครบรอบนะคะที่รัก! 💖<br><br> เค้าสัญญาว่าจะรักและดูแลเธอให้ดีแบบนี้ตลอดไป อยู่สร้างความทรงจำดีๆ ด้วยกันไปอีกนานแสนนานเลยนะ รักเธอที่สุดในโลกเลย! 🥰<br><br> ขอบคุณที่เข้ามาเป็นความสุขของเค้านะ ตั้งแต่วันแรกจนถึงวันนี้
+                                เธอคือของขวัญที่ดีที่สุดสำหรับเค้าเลย 💕</p>
+                        </div>
+                    </div>
+
+                    <div id="anniversary-timer-container">
+                        <div style="font-size:1rem; color:#888; margin-bottom:5px;">เราคบกันมา...</div>
+                        <div class="time-box">
+                            <div class="time-unit"><span id="anni-years">0</span><small>ปี</small></div>
+                            <div class="time-unit"><span id="anni-days">0</span><small>วัน</small></div>
+                            <div class="time-unit"><span id="anni-hours">0</span><small>ชม.</small></div>
+                            <div class="time-unit"><span id="anni-minutes">0</span><small>นาที</small></div>
+                            <div class="time-unit"><span id="anni-seconds">0</span><small>วิ.</small></div>
+                        </div>
+                    </div>
+
+                    <div class="timeline-container">
+                        <div class="timeline-item">
+                            <div class="timeline-date">🎮 จุดเริ่มต้น</div>
+                            <div class="timeline-content">รู้จักกันจากเกม Free Fire เริ่มต้นจากพี่น้อง... น้องคนนี้น่ารักจัง 😊</div>
+                        </div>
+                        <div class="timeline-item">
+                            <div class="timeline-date">💕 เริ่มคุยกัน</div>
+                            <div class="timeline-content">คุยกันมา 2 เดือน จนแน่ใจว่าคนนี้แหละ! ตัดสินใจขอเป็นแฟน</div>
+                        </div>
+                        <div class="timeline-item">
+                            <div class="timeline-date" style="color:#d63384; font-size:1rem;">📅 10 มี.ค. 65</div>
+                            <div class="timeline-content"><b>วันครบรอบของเรา ❤️</b><br>ตอนนั้นเขินมากๆ เลย >///
+                                <</div>
+                            </div>
+                            <div class="timeline-item">
+                                <div class="timeline-date">🚗 เจอกันครั้งแรก</div>
+                                <div class="timeline-content">เริ่มไปหาและได้เจอกัน ดีใจที่สุดที่ได้เจอตัวจริง 🥰</div>
+                            </div>
+                            <div class="timeline-item">
+                                <div class="timeline-date">👫 ปัจจุบัน</div>
+                                <div class="timeline-content">รักเธอมากๆ ขอบคุณที่อยู่เคียงข้างกันเสมอ รักนะ! 💖</div>
+                            </div>
+                        </div>
+                        <button class="nav-btn" style="margin-top: 15px;" onclick="goToPage('page-menu')">⬅ กลับเมนู</button>
+                    </div>
+                </div>
+            </div>
+
+            <div id="page-birthday" class="page">
+                <div class="split-layout">
+                    <div class="split-left">
+                        <div class="photo-frame">
+                            <video class="video-frame" controls autoplay loop muted><source src="birthday.mp4" type="video/mp4"></video>
+                        </div>
+                    </div>
+                    <div class="split-right" style="justify-content: flex-start; padding-top: 20px;">
+                        <h1 class="glow-text">🎂 HBD To You!</h1>
+                        <div class="countdown-wrapper" id="countdown-wrapper">
+                            <div class="countdown-title">⏳ อีกนิดเดียวจะถึงวันเกิดแล้ว!</div>
+                            <div class="time-box">
+                                <div class="time-unit"><span id="cd-days">0</span><small>วัน</small></div>
+                                <div class="time-unit"><span id="cd-hours">0</span><small>ชม.</small></div>
+                                <div class="time-unit"><span id="cd-minutes">0</span><small>นาที</small></div>
+                                <div class="time-unit"><span id="cd-seconds">0</span><small>วิ.</small></div>
+                            </div>
+                        </div>
+                        <div style="width: 100%; display: flex; flex-direction: column; align-items: center; justify-content: flex-start;">
+                            <p style="color: #888; font-size: 1.1rem; margin-top: 20px;" id="waiting-text">✨ กดปุ่มเพื่อฉลอง ✨</p>
+                            <div style="margin-top: 10px;"><button id="blow-btn" class="nav-btn" onclick="blowCandles()">💨 เป่าเค้ก</button></div>
+                            <button id="back-btn-initial" class="nav-btn" style="background:transparent; border:2px solid #ff9a9e; color:#ff9a9e; margin-top: 10px;" onclick="goToPage('page-menu')">กลับ</button>
+                            <div id="wishes-card" class="wishes-card">
+                                <p id="wishes-text"></p>
+                            </div>
+                            <div id="mystery-box" class="gift-box" onclick="openGift()">🎁</div>
+                            <div id="coupon-card" class="coupon-card">
+                                <h2>🎟️ คูปองตามใจ 1 วัน 🎟️</h2>
+                                <p>ใช้สิทธิ์นี้ให้เค้าทำอะไรก็ได้ 1 อย่าง!</p>
+                                <p style="font-size: 0.9rem;">(หมดเขต: ไม่มีวันหมดอายุ)</p>
+                            </div>
+                            <button id="back-btn" class="nav-btn" style="background:transparent; border:2px solid #ff9a9e; color:#ff9a9e; margin-top: 20px; display: none; margin-bottom: 20px;" onclick="goToPage('page-menu')">กลับหน้าเมนู</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div id="page-quiz" class="page">
+                <h1 style="color:#ff6b81;">Love Quiz 💖</h1>
+                <div class="quiz-box">
+                    <div id="quiz-content">
+                        <p class="quiz-question">1. เราคบกันวันที่เท่าไหร่?</p>
+                        <div class="quiz-options">
+                            <button class="quiz-btn" onclick="checkAnswer(1, false)">14 กุมภาพันธ์</button>
+                            <button class="quiz-btn" onclick="checkAnswer(1, true)">10 มีนาคม</button>
+                            <button class="quiz-btn" onclick="checkAnswer(1, false)">1 มกราคม</button>
+                        </div>
+                    </div>
+                    <div id="quiz-result" class="quiz-result">
+                        <h2>เก่งมากที่รัก! 🎉</h2>
+                        <p>จำได้หมดเลย น่ารักที่สุดในโลก! 😘</p>
+                    </div>
+                </div>
+                <button class="nav-btn" style="margin-top:20px;" onclick="goToPage('page-menu')">⬅ กลับเมนู</button>
+            </div>
+
+            <div id="page-gallery" class="page">
+                <h1>Our Memories 🎞️</h1>
+                <div class="gallery-scroll">
+                    <div class="gallery-item"><img src="pic1.jpg"></div>
+                    <div class="gallery-item"><video controls muted style="width:100%; height:100%; object-fit:cover; border-radius:3px;"><source src="video1.mp4" type="video/mp4"></video></div>
+                    <div class="gallery-item"><img src="pic2.jpg"></div>
+                    <div class="gallery-item"><video controls muted style="width:100%; height:100%; object-fit:cover; border-radius:3px;"><source src="video2.mp4" type="video/mp4"></video></div>
+                    <div class="gallery-item"><img src="pic3.jpg"></div>
+                    <div class="gallery-item"><video controls muted style="width:100%; height:100%; object-fit:cover; border-radius:3px;"><source src="video3.mp4" type="video/mp4"></video></div>
+                    <div class="gallery-item"><img src="pic4.jpg"></div>
+                    <div class="gallery-item"><img src="pic5.jpg"></div>
+                </div>
+                <button class="nav-btn" onclick="goToPage('page-menu')">⬅ กลับเมนู</button>
+            </div>
+
+            <div id="page-letter" class="page">
+                <h1 style="margin-bottom:10px;">ความในใจ 💌</h1>
+                <div style="flex-grow:1; display:flex; align-items:center; justify-content:center; width:100%;">
+                    <div class="letter-paper">
+                        <div style="position:relative;">
+                            <button onclick="toggleEdit('letter-msg-content', 'letter')" class="edit-btn" style="top:-10px; right:-10px;">✏️</button>
+
+                            <div class="letter-icon">❤️</div>
+                            <div id="letter-msg-content" class="editable-content">
+                                <p><b>ถึง เธอที่รักสุดหัวใจ,</b></p>
+                                <p>วันนี้เค้าอยากจะมาเขียนความในใจให้เธอได้อ่านนะ...</p>
+                                <p>ตั้งแต่มีเธอเข้ามาในชีวิต โลกของเค้าก็เปลี่ยนไปมากเลยนะ มันสดใสขึ้น มีความสุขมากขึ้น แล้วก็มีเป้าหมายมากขึ้นด้วย ขอบคุณนะที่เข้ามาเป็นเรื่องราวดีๆ ในชีวิตเค้า ขอบคุณที่เป็นรอยยิ้มให้กันในทุกๆ วัน</p>
+                                <p>เค้ารู้ว่าเค้าอาจจะไม่ใช่คนที่ดีที่สุด อาจจะมีงี่เง่าบ้าง เอาแต่ใจบ้าง แต่ขอบคุณนะที่เธอยังใจเย็นและอยู่ข้างๆ กันเสมอ เค้าสัญญาว่าจะปรับปรุงตัวให้ดีขึ้น จะดูแลเธอให้ดีกว่าเดิม จะทำให้เธอยิ้มได้เยอะๆ ในทุกๆ วันเลย</p>
+                                <p>ไม่ว่าวันข้างหน้าเราจะต้องเจออะไร เค้าสัญญาว่าจะจับมือเธอไว้แน่นๆ จะไม่ปล่อยมือไปไหน เราจะเดินไปด้วยกัน จะเติบโตไปด้วยกันนะ</p>
+                                <p>รักเธอนะ รักมากๆ รักที่สุดในโลกเลย</p>
+                                <p>ขอบคุณที่เกิดมาเป็นความโชคดีของเค้านะคะ</p>
+                                <br>
+                                <p align="right"><b>- จากคนคลั่งรักคนนี้ -</b></p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <button class="nav-btn" onclick="goToPage('page-menu')">⬅ กลับเมนู</button>
+            </div>
+
+            <div id="page-bucketlist" class="page">
+                <h1 style="color:#ff6b81;">Things To Do Together 📝</h1>
+                <div class="bucket-list-container">
+                    <div class="task-input-group">
+                        <input type="text" id="taskInput" class="task-input" placeholder="สิ่งที่อยากทำด้วยกัน..." onkeyup="if(event.key === 'Enter') addBucketItem()">
+                        <button class="task-btn-add" onclick="addBucketItem()">+</button>
+                    </div>
+                    <ul id="bucket-list" class="task-list"></ul>
+                </div>
+                <button class="nav-btn" onclick="goToPage('page-menu')">⬅ กลับเมนู</button>
+            </div>
+
+            <div id="page-reasons" class="page">
+                <h1 style="color:#ff6b81;">100 Reasons Why I Love You 💖</h1>
+                <div class="reasons-container">
+                    <div class="reason-card" id="reason-card" onclick="flipReasonCard()">
+                        <div class="reason-front">
+                            <div>แตะเพื่อดูเหตุผล 👆</div>
+                        </div>
+                        <div class="reason-back">
+                            <div id="reason-text">...</div>
+                        </div>
+                    </div>
+                </div>
+                <button class="refresh-reason-btn" onclick="randomReason()">สุ่มข้อใหม่ 🎲</button>
+                <button class="nav-btn" style="margin-top: 15px;" onclick="goToPage('page-menu')">⬅ กลับเมนู</button>
+            </div>
+
+            <div id="page-coupons" class="page">
+                <h1 style="color:#ff6b81;">กระเป๋าคูปองรัก 🎫</h1>
+                <div class="bucket-list-container" style="height: auto; flex-grow: 0; margin-bottom: 5px; padding: 15px;">
+                    <div class="task-input-group">
+                        <input type="text" id="couponTitleInput" class="task-input" placeholder="ชื่อคูปอง (เช่น นวดไหล่)" style="flex:1;">
+                        <input type="text" id="couponDescInput" class="task-input" placeholder="คำอธิบายสั้นๆ" style="flex:2;">
+                        <button class="task-btn-add" onclick="addNewCoupon()">+ เพิ่ม</button>
+                    </div>
+                </div>
+                <div id="coupons-grid" class="coupons-grid">
+                </div>
+                <button class="nav-btn" onclick="goToPage('page-menu')">⬅ กลับเมนู</button>
+            </div>
+
+            <div id="page-openwhen" class="page">
+                <h1 style="color:#ff6b81;">Open When... ✉️</h1>
+                <div class="bucket-list-container" style="height: auto; flex-grow: 0; margin-bottom: 5px; padding: 15px;">
+                    <div class="task-input-group">
+                        <input type="text" id="owLabelInput" class="task-input" placeholder="เมื่อ..." style="flex:1;">
+                        <input type="text" id="owMsgInput" class="task-input" placeholder="ข้อความปลอบใจ" style="flex:2;">
+                        <input type="text" id="owIconInput" class="task-input" placeholder="อีโมจิ (เช่น 🥺)" style="width: 60px; min-width: 60px; text-align: center;">
+                        <button class="task-btn-add" onclick="addNewEnvelope()">+ เพิ่ม</button>
+                    </div>
+                </div>
+                <div id="envelopes-grid" class="envelopes-grid">
+                </div>
+                <button class="nav-btn" onclick="goToPage('page-menu')">⬅ กลับเมนู</button>
+            </div>
+
+            <div id="page-diary" class="page">
+                <h1 style="color:#ff6b81;">Love Diary 📝</h1>
+                <div class="bucket-list-container">
+                    <div class="task-input-group" style="align-items: flex-start;">
+                        <textarea id="diaryInput" class="task-input" placeholder="วันนี้มีเรื่องอะไรดีๆ อยากบอกเค้าไหม..." style="height: 60px; resize: none; border-radius: 20px;"></textarea>
+                        <button class="task-btn-add" onclick="addDiaryEntry()">+ เขียน</button>
+                    </div>
+                    <div id="diary-list" class="task-list" style="margin-top: 10px;">
+                    </div>
+                </div>
+                <button class="nav-btn" onclick="goToPage('page-menu')">⬅ กลับเมนู</button>
+            </div>
+
+            <div id="page-scratch" class="page">
+                <h1 style="color:#ff6b81;">Scratch Card 🎰</h1>
+                <div class="bucket-list-container" style="height: auto; flex-grow: 0; margin-bottom: 5px; padding: 15px;">
+                    <div class="task-input-group">
+                        <input type="text" id="scratchMsgInput" class="task-input" placeholder="ข้อความลับ..." style="flex:2;">
+                        <input type="text" id="scratchIconInput" class="task-input" placeholder="รางวัล (เช่น 🎁)" style="width: 80px; min-width: 80px; text-align: center;">
+                        <button class="task-btn-add" onclick="addNewScratchCard()">+ เพิ่ม</button>
+                    </div>
+                </div>
+                <div id="scratch-grid" class="scratch-grid">
+                </div>
+                <button class="nav-btn" onclick="goToPage('page-menu')">⬅ กลับเมนู</button>
+            </div>
+
+            <div id="page-capsule" class="page">
+                <h1 style="color:#ff6b81;">Time Capsule 💊</h1>
+                <div class="bucket-list-container" style="height: auto; flex-grow: 0; margin-bottom: 5px; padding: 15px;">
+                    <div class="task-input-group">
+                        <input type="text" id="capsuleMsg" class="task-input" placeholder="ข้อความถึงอนาคต..." style="flex:2;">
+                        <input type="date" id="capsuleDate" class="task-input" style="flex:1;">
+                        <button class="task-btn-add" onclick="addCapsule()">+ ฝัง</button>
+                    </div>
+                </div>
+                <div class="bucket-list-container" style="margin-top:0;">
+                    <div id="capsule-list" class="capsule-list"></div>
+                </div>
+                <button class="nav-btn" onclick="goToPage('page-menu')">⬅ กลับเมนู</button>
+            </div>
+
+            <div id="page-wish" class="page">
+                <div class="stars-container" id="stars-container"></div>
+                <h1 style="color:white; text-shadow:0 0 10px gold; z-index:10;">Make a Wish 🌌</h1>
+                <div style="z-index:10; width:90%; display:flex; flex-direction:column; align-items:center;">
+                    <input type="text" id="wishInput" class="task-input" placeholder="อธิษฐานเลย..." style="background:rgba(255,255,255,0.2); color:white; border:1px solid white;">
+                    <button class="nav-btn" style="margin-top:10px; background:gold; color:black;" onclick="makeAWish()">✨ ส่งคำอธิษฐาน</button>
+                </div>
+                <button class="nav-btn" style="margin-top:auto; z-index:10;" onclick="goToPage('page-menu')">⬅ กลับเมนู</button>
+            </div>
+
+            <div id="page-wheel" class="page">
+                <h1 style="color:#ff6b81;">Wheel of Love 🎡</h1>
+                <div class="bucket-list-container" style="height: auto; flex-grow: 0; margin-bottom: 5px; padding: 10px;">
+                    <div class="task-input-group">
+                        <input type="text" id="wheelRewardInput" class="task-input" placeholder="เพิ่มของรางวัล..." style="flex:1;">
+                        <button class="task-btn-add" onclick="addWheelReward()">+</button>
+                    </div>
+                    <div id="wheel-reward-list" class="wheel-reward-list"></div>
+                </div>
+                <div class="wheel-container">
+                    <div class="wheel-pointer"></div>
+                    <div class="wheel" id="wheel"></div>
+                    <div class="spin-btn" onclick="spinWheel()">SPIN</div>
+                </div>
+                <button class="nav-btn" style="margin-top:10px;" onclick="goToPage('page-menu')">⬅ กลับเมนู</button>
+            </div>
+
+            <div id="page-pet" class="page">
+                <h1 style="color:#ff6b81;">Love Pet 🐻</h1>
+
+                <div id="pet-select-screen" style="display:none; flex-direction:column; align-items:center;">
+                    <h2 style="color:#555;">เลือกน้องที่อยากเลี้ยง 👇</h2>
+                    <div class="pet-selection">
+                        <div class="select-pet-btn" onclick="selectPet('cat')">🐱</div>
+                        <div class="select-pet-btn" onclick="selectPet('dog')">🐶</div>
+                    </div>
+                </div>
+
+                <div id="pet-main-screen" style="display:none; flex-direction:column; align-items:center; width:100%; height:100%;">
+                    <div class="pet-name" onclick="renamePet()" id="pet-name-display">My Pet</div>
+
+                    <div class="pet-container">
+                        <div id="pet-display" class="pet-avatar" onclick="playWithPet()">🐱</div>
+
+                        <div class="love-bar-container">
+                            <div id="love-bar" class="love-bar"></div>
+                        </div>
+                        <div id="pet-status" class="love-text">น้องกำลังมีความสุข 💕</div>
+
+                        <div class="pet-actions">
+                            <button class="pet-btn" onclick="feedPet()">💖 ให้หัวใจ</button>
+                            <button class="pet-btn" onclick="switchPet()">🔄 เปลี่ยนน้อง</button>
+                        </div>
+                    </div>
+                </div>
+                <button class="nav-btn" onclick="goToPage('page-menu')">⬅ กลับเมนู</button>
+            </div>
+
+            <div id="page-chat" class="page">
+                <h1 style="color:#ff6b81; display:flex; align-items:center; gap:10px;">
+                    Love Chatbot 💬
+                    <button class="chat-reset-btn" onclick="resetChat()" title="เริ่มคุยใหม่">🔄</button>
+                </h1>
+                <div class="bucket-list-container">
+                    <div class="chat-box" id="chat-history">
+                        <div class="chat-msg msg-bot">สวัสดีค่ะที่รัก! วันนี้เป็นไงบ้าง? 🥰</div>
+                    </div>
+                    <div class="chat-input-area">
+                        <input type="text" id="chatInput" class="task-input" placeholder="พิมพ์อะไรหน่อย..." onkeyup="if(event.key === 'Enter') sendMessage()">
+                        <button class="task-btn-add" onclick="sendMessage()">➤</button>
+                    </div>
+                </div>
+                <button class="nav-btn" onclick="goToPage('page-menu')">⬅ กลับเมนู</button>
+            </div>
+
+            <div id="page-notes" class="page">
+                <h1 style="color:#ff6b81;">Sticky Notes 📌</h1>
+                <div class="bucket-list-container" style="background:transparent; box-shadow:none;">
+                    <div class="task-input-group" style="background:white; padding:10px; border-radius:20px; margin-bottom:15px;">
+                        <input type="text" id="noteInput" class="task-input" placeholder="แปะข้อความ..." style="flex:1;">
+                        <button class="task-btn-add" onclick="addStickyNote()">+ แปะ</button>
+                    </div>
+                    <div id="notes-grid" class="notes-grid"></div>
+                </div>
+                <button class="nav-btn" onclick="goToPage('page-menu')">⬅ กลับเมนู</button>
+            </div>
+
+            <div id="page-deeptalk" class="page">
+                <h1 style="color:#ff6b81;">Deep Talk Cards 🃏</h1>
+
+                <div class="bucket-list-container" style="height: auto; flex-grow: 0; margin-bottom: 5px; padding: 10px;">
+                    <div class="task-input-group">
+                        <input type="text" id="newQuestionInput" class="task-input" placeholder="เพิ่มคำถามใหม่..." style="flex:1;">
+                        <button class="task-btn-add" onclick="addDeepQuestion()">+</button>
+                    </div>
+                </div>
+
+                <div style="flex-grow:1; display:flex; align-items:center; justify-content:center;">
+                    <div class="card-container" onclick="flipCard(this)">
+                        <div class="card-inner">
+                            <div class="card-front">
+                                <span>❓</span>
+                                <span style="font-size:1rem; margin-top:10px;">แตะเพื่อเปิดคำถาม</span>
+                            </div>
+                            <div class="card-back">
+                                <div class="card-controls">
+                                    <button class="card-btn" onclick="editCurrentCard(event)">✏️</button>
+                                    <button class="card-btn" onclick="deleteCurrentCard(event)">🗑️</button>
+                                </div>
+                                <div id="card-question" style="margin-top:20px;">...</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <button class="refresh-reason-btn" onclick="nextCard()">คำถามถัดไป ⏭️</button>
+                <button class="nav-btn" style="margin-top:20px;" onclick="goToPage('page-menu')">⬅ กลับเมนู</button>
+            </div>
+
+        </div>
+
+        <script>
+            const passCode = "100365";
+            const startDate = new Date("2022-03-10T00:00:00");
+            const hbdMessage = "สุขสันต์วันเกิดนะคะคนเก่งของเค้า! 🎂🎉\n\n6 มกราคม เป็นวันที่สำคัญที่สุดสำหรับเค้าเลยนะ เพราะเป็นวันที่โลกเหวี่ยงเธอให้มาเจอกัน ขอบคุณที่เกิดมา ขอบคุณที่เติบโตมาอย่างดี และขอบคุณที่เลือกมาอยู่ข้างๆ เค้านะคะ\n\nปีนี้ขอให้หนูมีความสุขมากๆ ยิ้มเยอะๆ (เพราะหนูยิ้มสวยที่สุดในโลก) สุขภาพร่างกายแข็งแรง ไม่เจ็บไม่ป่วยนะ กินอิ่มนอนหลับ ขอให้โลกใจดีกับหนูเหมือนที่หนูใจดีกับเค้า\n\nไม่ว่าจะเจอเรื่องดีหรือร้าย ขอให้รู้ไว้เสมอว่าหนูยังมีเค้าอยู่ตรงนี้เสมอนะ จะคอยจับมือหนู คอยซัพพอร์ต และรักหนูให้มากขึ้นทุกวันเลย สัญญาว่าจะอยู่เป่าเค้กด้วยกันจนแก่เลยนะ!\n\nรักหนูที่สุดในโลกเลยค่ะ ไอ้ต้าวความรักของเค้า ❤️🥰";
+
+            const pageSongs = {
+                'page-login': 'intro.mp3',
+                'page-menu': 'love.mp3',
+                'page-birthday': 'hbd.mp3',
+                'page-anniversary': 'love.mp3',
+                'page-gallery': 'love.mp3',
+                'page-letter': 'love.mp3',
+                'page-quiz': 'love.mp3',
+                'page-bucketlist': 'love.mp3',
+                'page-reasons': 'love.mp3',
+                'page-coupons': 'love.mp3',
+                'page-openwhen': 'love.mp3',
+                'page-diary': 'love.mp3',
+                'page-scratch': 'love.mp3',
+                'page-capsule': 'love.mp3',
+                'page-wish': 'love.mp3',
+                'page-wheel': 'love.mp3',
+                'page-pet': 'love.mp3',
+                'page-chat': 'love.mp3',
+                'page-notes': 'love.mp3',
+                'page-deeptalk': 'love.mp3'
+            };
+
+            let loginSlideIndex = 0;
+            let loginInterval;
+
+            function startLoginSlideshow() {
+                if (loginInterval) clearInterval(loginInterval);
+                const slides = document.querySelectorAll('.login-slide-img');
+                if (slides.length === 0) return;
+                slides.forEach(s => s.classList.remove('active'));
+                slides[0].classList.add('active');
+                loginInterval = setInterval(() => {
+                    slides[loginSlideIndex].classList.remove('active');
+                    loginSlideIndex = (loginSlideIndex + 1) % slides.length;
+                    slides[loginSlideIndex].classList.add('active');
+                }, 3500);
+            }
+
+            let anniSlideIndex = 0;
+            let anniInterval;
+
+            function startAnniSlideshow() {
+                if (anniInterval) clearInterval(anniInterval);
+                const slides = document.querySelectorAll('.anni-slide-img');
+                if (slides.length === 0) return;
+                slides.forEach(s => s.classList.remove('active'));
+                slides[0].classList.add('active');
+                anniInterval = setInterval(() => {
+                    slides[anniSlideIndex].classList.remove('active');
+                    anniSlideIndex = (anniSlideIndex + 1) % slides.length;
+                    slides[anniSlideIndex].classList.add('active');
+                }, 3000);
+            }
+
+            function stopAnniSlideshow() {
+                if (anniInterval) clearInterval(anniInterval);
+            }
+
+            let balloonInterval;
+            let roseInterval;
+            let galleryInterval;
+            let lastCursorTime = 0;
+
+            function startBalloons() {
+                if (balloonInterval) return;
+                const container = document.getElementById('balloon-container');
+                const colors = ['#ff7675', '#74b9ff', '#55efc4', '#ffeaa7', '#a29bfe'];
+                balloonInterval = setInterval(() => {
+                    const b = document.createElement('div');
+                    b.classList.add('balloon');
+                    b.style.left = Math.random() * 100 + 'vw';
+                    b.style.background = colors[Math.floor(Math.random() * colors.length)];
+                    b.style.animationDuration = (Math.random() * 2 + 4) + 's';
+                    container.appendChild(b);
+                    setTimeout(() => b.remove(), 6000);
+                }, 400);
+            }
+
+            function stopBalloons() {
+                clearInterval(balloonInterval);
+                balloonInterval = null;
+                document.getElementById('balloon-container').innerHTML = "";
+            }
+
+            function startRoses() {
+                if (roseInterval) return;
+                const container = document.getElementById('rose-container');
+                roseInterval = setInterval(() => {
+                    const rose = document.createElement('div');
+                    rose.classList.add('rose-bg');
+                    rose.innerText = ['🌹', '🌸', '🌷'][Math.floor(Math.random() * 3)];
+                    rose.style.left = Math.random() * 100 + 'vw';
+                    rose.style.animationDuration = Math.random() * 3 + 3 + 's';
+                    rose.style.fontSize = Math.random() * 20 + 20 + 'px';
+                    container.appendChild(rose);
+                    setTimeout(() => rose.remove(), 6000);
+                }, 400);
+            }
+
+            function stopRoses() {
+                clearInterval(roseInterval);
+                roseInterval = null;
+                document.getElementById('rose-container').innerHTML = "";
+            }
+
+            function startGalleryEffect() {
+                if (galleryInterval) return;
+                const container = document.getElementById('rose-container');
+                galleryInterval = setInterval(() => {
+                    const el = document.createElement('div');
+                    el.classList.add('rose-bg');
+                    el.innerText = ['📸', '🎞️', '💑', '✨', '❤️'][Math.floor(Math.random() * 5)];
+                    el.style.left = Math.random() * 100 + 'vw';
+                    el.style.animationDuration = Math.random() * 3 + 3 + 's';
+                    el.style.fontSize = Math.random() * 20 + 20 + 'px';
+                    container.appendChild(el);
+                    setTimeout(() => el.remove(), 6000);
+                }, 300);
+            }
+
+            function stopGalleryEffect() {
+                clearInterval(galleryInterval);
+                galleryInterval = null;
+                document.getElementById('rose-container').innerHTML = "";
+            }
+
+            let isBlown = false;
+
+            function blowCandles() {
+                if (isBlown) return;
+                document.getElementById("blow-btn").style.display = "none";
+                document.getElementById("back-btn-initial").style.display = "none";
+                document.getElementById("waiting-text").style.display = "none";
+
+                shootConfetti();
+                document.getElementById("wishes-card").style.display = "block";
+                document.getElementById("back-btn").style.display = "block";
+
+                setTimeout(() => {
+                    document.getElementById("mystery-box").style.display = "block";
+                }, 2000);
+
+                typeWriter();
+                isBlown = true;
+            }
+
+            function openGift() {
+                document.getElementById("mystery-box").style.display = "none";
+                document.getElementById("coupon-card").style.display = "block";
+                shootConfetti();
+            }
+
+            let currentQuestion = 1;
+
+            function checkAnswer(q, isCorrect) {
+                if (isCorrect) {
+                    if (q === 1) {
+                        document.getElementById("quiz-content").innerHTML = `
+                    <p class="quiz-question">2. เค้าชอบกินอะไรมากที่สุด?</p>
+                    <div class="quiz-options">
+                        <button class="quiz-btn" onclick="checkAnswer(2, false)">ข้าวมันไก่</button>
+                        <button class="quiz-btn" onclick="checkAnswer(2, true)">หมูกระทะ</button>
+                        <button class="quiz-btn" onclick="checkAnswer(2, false)">ส้มตำ</button>
+                    </div>`;
+                    } else if (q === 2) {
+                        document.getElementById("quiz-content").innerHTML = `
+                    <p class="quiz-question">3. เค้าชอบส่วนไหนของเธอที่สุด?</p>
+                    <div class="quiz-options">
+                        <button class="quiz-btn" onclick="checkAnswer(3, true)">รอยยิ้ม</button>
+                        <button class="quiz-btn" onclick="checkAnswer(3, true)">ดวงตา</button>
+                        <button class="quiz-btn" onclick="checkAnswer(3, true)">ทุกตรงเลย!</button>
+                    </div>`;
+                    } else if (q === 3) {
+                        document.getElementById("quiz-content").style.display = "none";
+                        document.getElementById("quiz-result").style.display = "block";
+                        shootConfetti();
+                    }
+                } else {
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'ผิดจ้า!',
+                        text: 'ลองทายใหม่นะ 😜',
+                        confirmButtonColor: '#ff9a9e'
+                    });
+                }
+            }
+
+            function showLoveBattery() {
+                const quotes = [
+                    "รักเธอที่สุดในโลกเลย! ❤️", "เหนื่อยไหมคนเก่ง พักผ่อนบ้างนะ 🥺", "คิดถึงจังเลย ขอกอดหน่อย 🤗",
+                    "เธอคือรอยยิ้มของเค้านะ 😊", "สู้ๆ นะคะ เค้าอยู่ข้างๆ เสมอ ✌️", "วันนี้เธอน่ารักจัง! 🥰",
+                    "ขอบคุณที่มีเธอในชีวิตนะ 💕"
+                ];
+                const randomQuote = quotes[Math.floor(Math.random() * quotes.length)];
+                Swal.fire({
+                    title: 'กำลังใจมาแล้ว! ✨',
+                    text: randomQuote,
+                    icon: 'success',
+                    confirmButtonText: 'รับพลัง! ❤️',
+                    confirmButtonColor: '#ff9a9e',
+                    backdrop: `rgba(255,192,203,0.4)`
+                });
+                shootConfetti();
+            }
+
+            const reasons = [
+                "เพราะเธอน่ารัก", "เพราะเธอยิ้มสวย", "เพราะเธอเข้าใจเค้า", "เพราะเธอทำอาหารอร่อย", "เพราะเธอเป็นตัวของตัวเอง",
+                "เพราะเธอทำให้โลกสดใส", "เพราะเธอกอดอุ่น", "เพราะเธอคือความสุขของเค้า", "เพราะเธอคอยให้กำลังใจ", "เพราะเธอไม่เหมือนใคร",
+                "เพราะเธอใส่ใจรายละเอียด", "เพราะเธอให้อภัยเค้าเสมอ", "เพราะเธอคือบ้านของใจ", "เพราะเราเข้ากันได้ดี", "เพราะเธอรักครอบครัว",
+            ];
+
+            function flipReasonCard() {
+                document.getElementById('reason-card').classList.toggle('flipped');
+                if (document.getElementById('reason-card').classList.contains('flipped')) {
+                    if (document.getElementById("reason-text").innerText === "...") randomReason();
+                }
+            }
+
+            function randomReason() {
+                const r = reasons[Math.floor(Math.random() * reasons.length)];
+                document.getElementById("reason-text").innerText = r;
+                document.getElementById('reason-card').classList.add('flipped');
+            }
+
+            function createStars() {
+                const container = document.getElementById("stars-container");
+                for (let i = 0; i < 50; i++) {
+                    const star = document.createElement("div");
+                    star.className = "star";
+                    star.style.left = Math.random() * 100 + "%";
+                    star.style.top = Math.random() * 100 + "%";
+                    star.style.animationDelay = Math.random() * 2 + "s";
+                    container.appendChild(star);
+                }
+            }
+
+            function makeAWish() {
+                const input = document.getElementById("wishInput");
+                if (input.value.trim()) {
+                    const lantern = document.createElement("div");
+                    lantern.className = "wish-lantern";
+                    lantern.innerText = input.value;
+                    lantern.style.left = (Math.random() * 80 + 10) + "%";
+                    lantern.style.bottom = "-60px";
+                    document.getElementById("page-wish").appendChild(lantern);
+
+                    input.value = "";
+                    setTimeout(() => lantern.remove(), 15000);
+                } else {
+                    Swal.fire('อธิษฐานก่อนสิ!', '', 'warning');
+                }
+            }
+
+            let wheelRewards = JSON.parse(localStorage.getItem('wheelRewards')) || ["หอมแก้ม", "พาไปกินติม", "ตามใจ 1 วัน", "กอด 1 ที", "บอกรัก", "นวด 5 นาที"];
+            let isSpinning = false;
+
+            function drawWheel() {
+                const wheel = document.getElementById("wheel");
+                const list = document.getElementById("wheel-reward-list");
+                wheel.innerHTML = "";
+                list.innerHTML = "";
+                const segmentAngle = 360 / wheelRewards.length;
+                const colors = ['#ff9ff3', '#feca57', '#ff6b6b', '#48dbfb', '#1dd1a1', '#5f27cd'];
+                wheelRewards.forEach((reward, index) => {
+                    const segment = document.createElement("div");
+                    segment.className = "wheel-section";
+                    segment.style.backgroundColor = colors[index % colors.length];
+                    segment.style.transform = `rotate(${index * segmentAngle}deg) skewY(-${90 - segmentAngle}deg)`;
+                    const text = document.createElement("div");
+                    text.className = "wheel-text";
+                    text.innerText = reward;
+                    text.style.transform = `skewY(${90 - segmentAngle}deg) rotate(${segmentAngle / 2}deg)`;
+                    segment.appendChild(text);
+                    wheel.appendChild(segment);
+                    const li = document.createElement("div");
+                    li.className = "reward-item";
+                    li.innerHTML = `<span>${reward}</span> <button class="delete-btn" onclick="deleteWheelReward(${index})">✕</button>`;
+                    list.appendChild(li);
+                });
+            }
+
+            function spinWheel() {
+                if (isSpinning) return;
+                isSpinning = true;
+                const wheel = document.getElementById("wheel");
+                const randomDegree = Math.floor(Math.random() * 3600) + 360;
+                wheel.style.transform = `rotate(${randomDegree}deg)`;
+                setTimeout(() => {
+                    isSpinning = false;
+                    wheel.style.transition = 'none';
+                    const actualDegree = randomDegree % 360;
+                    wheel.style.transform = `rotate(${actualDegree}deg)`;
+                    setTimeout(() => wheel.style.transition = 'transform 4s cubic-bezier(0.17, 0.67, 0.12, 0.99)', 10);
+                    const segmentAngle = 360 / wheelRewards.length;
+                    const winningIndex = Math.floor((360 - actualDegree + segmentAngle / 2) % 360 / segmentAngle);
+                    Swal.fire({
+                        title: 'ยินดีด้วย!',
+                        text: `ได้รางวัล: ${wheelRewards[winningIndex]} 🎉`,
+                        confirmButtonColor: '#ff9a9e'
+                    });
+                    shootConfetti();
+                }, 4000);
+            }
+
+            function addWheelReward() {
+                const input = document.getElementById("wheelRewardInput");
+                if (input.value.trim()) {
+                    wheelRewards.push(input.value.trim());
+                    localStorage.setItem('wheelRewards', JSON.stringify(wheelRewards));
+                    input.value = "";
+                    drawWheel();
+                }
+            }
+
+            function deleteWheelReward(index) {
+                if (wheelRewards.length <= 2) {
+                    Swal.fire('ต้องมีอย่างน้อย 2 รางวัลนะ!', '', 'warning');
+                    return;
+                }
+                wheelRewards.splice(index, 1);
+                localStorage.setItem('wheelRewards', JSON.stringify(wheelRewards));
+                drawWheel();
+            }
+
+            let i = 0;
+
+            function typeWriter() {
+                const target = document.getElementById("wishes-text");
+                target.innerHTML = "";
+                const formattedMsg = hbdMessage.replace(/\n/g, "<br>");
+                let currentText = "";
+                let charIndex = 0;
+
+                function type() {
+                    if (charIndex < hbdMessage.length) {
+                        let char = hbdMessage.charAt(charIndex);
+                        currentText += (char === '\n') ? "<br>" : char;
+                        target.innerHTML = currentText;
+                        charIndex++;
+                        setTimeout(type, 40);
+                    }
+                }
+                type();
+            }
+
+            function updateBirthdayCountdown() {
+                const now = new Date();
+                const currentYear = now.getFullYear();
+                let nextBirthday = new Date(currentYear, 0, 6);
+                if (now > nextBirthday && now.getDate() !== 6) nextBirthday.setFullYear(currentYear + 1);
+                if (now.getDate() === 6 && now.getMonth() === 0) {
+                    if (document.querySelector('.countdown-title')) document.querySelector('.countdown-title').innerHTML = "🎉 สุขสันต์วันเกิด! วันนี้วันของเธอ 🎉";
+                    if (document.querySelector('.time-box')) document.querySelector('.time-box').style.display = "none";
+                    return;
+                }
+                const diff = nextBirthday - now;
+                const days = Math.floor(diff / (1000 * 60 * 60 * 24));
+                const hours = Math.floor((diff / (1000 * 60 * 60)) % 24);
+                const minutes = Math.floor((diff / (1000 * 60)) % 60);
+                const seconds = Math.floor((diff / 1000) % 60);
+                if (document.getElementById("cd-days")) {
+                    document.getElementById("cd-days").innerText = days;
+                    document.getElementById("cd-hours").innerText = hours;
+                    document.getElementById("cd-minutes").innerText = minutes;
+                    document.getElementById("cd-seconds").innerText = seconds;
+                }
+            }
+
+            function updateAnniversaryTimer() {
+                const now = new Date();
+                const diff = now - startDate;
+                const years = Math.floor(diff / (1000 * 60 * 60 * 24 * 365.25));
+                const days = Math.floor((diff % (1000 * 60 * 60 * 24 * 365.25)) / (1000 * 60 * 60 * 24));
+                const hours = Math.floor((diff / (1000 * 60 * 60)) % 24);
+                const minutes = Math.floor((diff / (1000 * 60)) % 60);
+                const seconds = Math.floor((diff / 1000) % 60);
+
+                if (document.getElementById("anni-days")) {
+                    document.getElementById("anni-years").innerText = years;
+                    document.getElementById("anni-days").innerText = days;
+                    document.getElementById("anni-hours").innerText = hours;
+                    document.getElementById("anni-minutes").innerText = minutes;
+                    document.getElementById("anni-seconds").innerText = seconds;
+                }
+            }
+            setInterval(() => {
+                updateBirthdayCountdown();
+                updateAnniversaryTimer();
+            }, 1000);
+
+            const bgMusic = document.getElementById("bg-music");
+            let isMusicPlaying = false;
+            let currentSongFile = "";
+
+            document.addEventListener('click', function() {
+                if (!isMusicPlaying && bgMusic.src) {
+                    bgMusic.play().then(() => {
+                        isMusicPlaying = true;
+                        document.querySelector('.music-control').innerText = "🎵";
+                    }).catch(e => console.log("Waiting for interaction"));
+                }
+            }, {
+                once: true
+            });
+
+            document.addEventListener("visibilitychange", function() {
+                if (document.hidden) {
+                    bgMusic.pause();
+                    document.title = "กลับมาหาเค้าหน่อย 🥺";
+                } else {
+                    if (isMusicPlaying) {
+                        bgMusic.play();
+                    }
+                    document.title = "For My Love ❤️";
+                }
+            });
+
+            document.addEventListener('mousemove', function(e) {
+                const now = Date.now();
+                if (now - lastCursorTime > 100) {
+                    lastCursorTime = now;
+                    const body = document.querySelector('body');
+                    const heart = document.createElement('span');
+                    heart.classList.add('cursor-heart');
+                    heart.style.left = e.clientX + 'px';
+                    heart.style.top = e.clientY + 'px';
+                    heart.innerText = '❤️';
+                    const size = Math.random() * 20;
+                    heart.style.fontSize = 10 + size + 'px';
+                    body.appendChild(heart);
+                    setTimeout(() => {
+                        heart.remove();
+                    }, 1000);
+                }
+            });
+
+            function toggleMusic() {
+                if (isMusicPlaying) {
+                    bgMusic.pause();
+                    isMusicPlaying = false;
+                    document.querySelector('.music-control').innerText = "🔇";
+                } else {
+                    if (bgMusic.src) {
+                        bgMusic.play();
+                        isMusicPlaying = true;
+                        document.querySelector('.music-control').innerText = "🎵";
+                    }
+                }
+            }
+
+            function playSongForPage(pageId) {
+                const newSongFile = pageSongs[pageId];
+                if (newSongFile && newSongFile !== currentSongFile) {
+                    currentSongFile = newSongFile;
+                    bgMusic.src = newSongFile;
+                    if (isMusicPlaying) {
+                        bgMusic.play().catch(e => console.log("Auto-play blocked"));
+                    }
+                }
+            }
+
+            function checkPassword() {
+                if (document.getElementById("passInput").value === passCode) {
+                    isMusicPlaying = true;
+                    document.querySelector('.music-control').innerText = "🎵";
+                    playSongForPage('page-menu');
+                    goToPage('page-menu');
+                } else {
+                    document.getElementById("error-msg").style.display = "block";
+                }
+            }
+
+            function goToPage(pageId) {
+                document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+                document.getElementById(pageId).classList.add('active');
+                playSongForPage(pageId);
+                stopBalloons();
+                stopRoses();
+                stopAnniSlideshow();
+                stopGalleryEffect();
+                if (pageId !== 'page-login' && loginInterval) clearInterval(loginInterval);
+
+                if (pageId === 'page-birthday') {
+                    startBalloons();
+                    isBlown = false;
+                    document.getElementById("blow-btn").style.display = "block";
+                    document.getElementById("back-btn-initial").style.display = "block";
+                    document.getElementById("waiting-text").style.display = "block";
+                    document.getElementById("wishes-card").style.display = "none";
+                    document.getElementById("back-btn").style.display = "none";
+                    document.getElementById("mystery-box").style.display = "none";
+                    document.getElementById("coupon-card").style.display = "none";
+                    document.getElementById("countdown-wrapper").style.display = "block";
+                } else if (pageId === 'page-anniversary') {
+                    startRoses();
+                    startAnniSlideshow();
+                } else if (pageId === 'page-gallery') {
+                    shootConfetti();
+                    startGalleryEffect();
+                } else if (pageId === 'page-letter') {
+                    startRoses();
+                } else if (pageId === 'page-openwhen') {
+                    renderEnvelopes();
+                } else if (pageId === 'page-scratch') {
+                    renderScratchCards();
+                } else if (pageId === 'page-capsule') {
+                    renderCapsules();
+                } else if (pageId === 'page-wish') {
+                    createStars();
+                } else if (pageId === 'page-wheel') {
+                    drawWheel();
+                } else if (pageId === 'page-pet') {
+                    // initPet(); 
+                }
+            }
+
+            function logout() {
+                document.getElementById("passInput").value = "";
+                goToPage('page-login');
+                startLoginSlideshow();
+                bgMusic.pause();
+                isMusicPlaying = false;
+                document.querySelector('.music-control').innerText = "🔇";
+            }
+
+            function createHearts() {
+                const container = document.getElementById('heart-container');
+                setInterval(() => {
+                    const heart = document.createElement('div');
+                    heart.classList.add('heart-bg');
+                    heart.innerText = ['❤️', '✨'][Math.floor(Math.random() * 2)];
+                    heart.style.left = Math.random() * 100 + 'vw';
+                    heart.style.animationDuration = Math.random() * 3 + 2 + 's';
+                    heart.style.fontSize = Math.random() * 20 + 20 + 'px';
+                    container.appendChild(heart);
+                    setTimeout(() => heart.remove(), 5000);
+                }, 400);
+            }
+            createHearts();
+
+            function shootConfetti() {
+                confetti({
+                    particleCount: 150,
+                    spread: 80,
+                    origin: {
+                        y: 0.6
+                    }
+                });
+            }
+
+            startLoginSlideshow();
+            bgMusic.src = pageSongs['page-login'];
+
+            function toggleGoodnight() {
+                const overlay = document.getElementById("goodnight-overlay");
+                if (overlay.style.display === "flex") {
+                    overlay.style.display = "none";
+                    document.querySelector('.music-control').click();
+                } else {
+                    overlay.style.display = "flex";
+                    createStarsOverlay();
+                }
+            }
+
+            function createStarsOverlay() {
+                const container = document.getElementById("gn-stars");
+                container.innerHTML = "";
+                for (let i = 0; i < 30; i++) {
+                    const star = document.createElement("div");
+                    star.className = "star-overlay";
+                    star.style.width = Math.random() * 3 + "px";
+                    star.style.height = star.style.width;
+                    star.style.left = Math.random() * 100 + "%";
+                    star.style.top = Math.random() * 100 + "%";
+                    star.style.animationDelay = Math.random() * 2 + "s";
+                    container.appendChild(star);
+                }
+            }
+        </script>
+
+        <script type="module" src="script.js"></script>
+
+</body>
+
+</html>
