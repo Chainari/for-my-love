@@ -33,7 +33,6 @@ onValue(ref(db, 'messages'), (snapshot) => {
     }
 });
 
-// ทำให้ฟังก์ชันมองเห็นได้จาก HTML (สำคัญมาก!)
 window.toggleEdit = function(elementId, dbKey) {
     const el = document.getElementById(elementId);
     const btn = event.target;
@@ -68,7 +67,7 @@ window.toggleEdit = function(elementId, dbKey) {
 };
 
 // ==========================================
-// 2. ระบบ Love Pet (มี Logic เลือกตัวถ้ายังไม่มี)
+// 2. ระบบ Love Pet
 // ==========================================
 window.myPet = null;
 let petInterval;
@@ -82,13 +81,11 @@ onValue(ref(db, 'pet'), (snapshot) => {
 
     if (selectScreen && mainScreen) {
         if (data) {
-            // มีสัตว์เลี้ยงแล้ว -> โชว์หน้าเลี้ยง
             selectScreen.style.display = 'none';
             mainScreen.style.display = 'flex';
             updatePetUI();
             if (!petInterval) startPetLoop();
         } else {
-            // ยังไม่มีสัตว์เลี้ยง -> โชว์หน้าเลือก
             selectScreen.style.display = 'flex';
             mainScreen.style.display = 'none';
         }
@@ -177,10 +174,7 @@ window.playWithPet = function() {
 function startPetLoop() {
     if (petInterval) clearInterval(petInterval);
     petInterval = setInterval(() => {
-        if (window.myPet && window.myPet.love > 0) {
-            // ลดหัวใจ (เปิดใช้งานเมื่อต้องการ)
-            // update(ref(db, 'pet'), { love: window.myPet.love - 1 });
-        }
+        // Logic ลดหัวใจอัตโนมัติ
     }, 20000);
 }
 
@@ -276,7 +270,6 @@ const defaultCoupons = [
 onValue(ref(db, 'coupons'), (snapshot) => {
     const val = snapshot.val();
     if (!val) {
-        // ถ้า Database ว่าง ให้ใช้ข้อมูลตัวอย่าง
         myCoupons = defaultCoupons;
     } else {
         myCoupons = val;
@@ -411,7 +404,7 @@ window.resetChat = function() {
 };
 
 // ==========================================
-// 8. Deep Talk Cards
+// 8. Deep Talk Cards (Fixed for Button Click)
 // ==========================================
 let deepQuestions = [];
 let currentCardIndex = 0;
@@ -428,6 +421,17 @@ function customRenderCard() {
     }
 }
 
+// 🔥 ฟังก์ชัน Flip Card ที่แก้ไขแล้ว 🔥
+window.flipCard = function(cardElement) {
+    // ป้องกันการพลิกถ้ากดโดนปุ่มลบ/แก้ไข
+    if (event.target.tagName === 'BUTTON' || event.target.closest('button')) return;
+
+    const inner = cardElement.querySelector('.card-inner');
+    if (inner) {
+        inner.classList.toggle('flipped');
+    }
+};
+
 window.addDeepQuestion = function() {
     const input = document.getElementById('newQuestionInput');
     if (input.value.trim()) {
@@ -436,6 +440,44 @@ window.addDeepQuestion = function() {
         input.value = "";
         Swal.fire('เพิ่มคำถามเรียบร้อย!', '', 'success');
     }
+};
+
+window.editCurrentCard = function(e) {
+    e.stopPropagation();
+    if (deepQuestions.length === 0) return;
+    Swal.fire({
+        title: 'แก้ไขคำถาม',
+        input: 'text',
+        inputValue: deepQuestions[currentCardIndex],
+        showCancelButton: true
+    }).then((result) => {
+        if (result.isConfirmed && result.value) {
+            deepQuestions[currentCardIndex] = result.value;
+            set(ref(db, 'deepTalk'), deepQuestions);
+        }
+    });
+};
+
+window.deleteCurrentCard = function(e) {
+    e.stopPropagation();
+    if (deepQuestions.length === 0) return;
+    Swal.fire({
+        title: 'ลบคำถามนี้?',
+        icon: 'warning',
+        showCancelButton: true,
+        confirmButtonColor: '#d33',
+        confirmButtonText: 'ลบเลย'
+    }).then((result) => {
+        if (result.isConfirmed) {
+            deepQuestions.splice(currentCardIndex, 1);
+            set(ref(db, 'deepTalk'), deepQuestions);
+            // Reset index logic
+            if (currentCardIndex >= deepQuestions.length) currentCardIndex = 0;
+            // Flip back
+            const card = document.querySelector('.card-inner');
+            if (card) card.classList.remove('flipped');
+        }
+    });
 };
 
 window.nextCard = function() {
@@ -450,7 +492,7 @@ window.nextCard = function() {
 };
 
 // ==========================================
-// 9. Open When (ใส่ข้อมูลตัวอย่างให้แล้ว)
+// 9. Open When
 // ==========================================
 let myEnvelopes = [];
 const defaultEnvelopes = [
